@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">找車子</string>
+    <string name="find_my_car">找車子</string>
+    <string name="location_name">地點描述</string>
+    <string name="coordinates">座標取得</string>
+    <string name="coordinates_gps">定位</string>
+    <string name="coordinates_map">地圖</string>
+    <string name="latitude">緯度</string>
+    <string name="longitude">經度</string>
+    <string name="map">地圖</string>
+    <string name="added">新增</string>
+    <string name="confirm">確認輸入</string>
+    <string name="location_name_empty">忘記輸入地點描述囉</string>
+    <string name="enable">啟動</string>
+    <string name="update">修改</string>
+    <string name="delete">刪除</string>
+    <string name="ConfirmDelete">確認刪除?</string>
+    <string name="confirmYes">是</string>
+    <string name="confirmNo">否</string>
+    <string name="stateEnalbe">啟動</string>
+    <string name="stateDisalbe">關閉</string>
+    <string name="here">車子在這裡</string>
+    <string name="gps_close">GPS尚未開啟</string>
+
+</resources>
