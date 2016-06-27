@@ -11,15 +11,15 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,8 +36,8 @@ public class MainActivity extends Activity {
     private Handler handler = new Handler();
 
     private List<ListItem> listItem;
-    private ListView lvLocation;
-    private CustomListAdapter adapter;
+    private RecyclerView lvLocation;
+    private CustomRecyclerViewAdapter adapter;
 
     private TextView tvMyCarLocation, tvState;
 
@@ -51,7 +51,7 @@ public class MainActivity extends Activity {
         ImageButton ibMark = (ImageButton) findViewById(R.id.ibMark);
         Button btMap = (Button) findViewById(R.id.btMap);
         Button btAdded = (Button) findViewById(R.id.btAdded);
-        lvLocation = (ListView) findViewById(R.id.lvLoaction);
+        lvLocation = (RecyclerView) findViewById(R.id.lvLoaction);
 
         dbHelper = new DBManager(this);
         dbHelper.openDatabase();
@@ -71,20 +71,28 @@ public class MainActivity extends Activity {
 		/* 列出地點 */
         allLocation();
 
-        lvLocation.setOnItemClickListener(new OnItemClickListener() {
-
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+        LinearLayoutManager lm = new LinearLayoutManager(this);
+        lvLocation.setLayoutManager(lm);
+        lvLocation.setHasFixedSize(true); //當RecyclerView大小沒改變時最佳化
+        lvLocation.setItemAnimator(new DefaultItemAnimator()); //預設動畫效果
+        lvLocation.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); //分隔線
+        lvLocation.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), lvLocation, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
                 showLoactionDialog(position);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
 
             }
-        });
+        }));
 
 		/* 標計車子位置 */
         ibMark.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
 //                getCoordinatesGPS();
-                LocationGPS locationGPS = new LocationGPS(MainActivity.this,listItem,tvMyCarLocation);
+                LocationGPS locationGPS = new LocationGPS(MainActivity.this, listItem, tvMyCarLocation);
                 locationGPS.startConnect();
                 STATE_INFO = "定位中。。。";
             }
@@ -117,7 +125,7 @@ public class MainActivity extends Activity {
     private void allLocation() {
 
         listItem = new ArrayList<>();
-        adapter = new CustomListAdapter(this, listItem);
+        adapter = new CustomRecyclerViewAdapter(this, listItem);
         lvLocation.setAdapter(adapter);
 
         String select = "SELECT * FROM location";
