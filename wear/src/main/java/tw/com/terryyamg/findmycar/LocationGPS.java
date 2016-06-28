@@ -1,14 +1,12 @@
 package tw.com.terryyamg.findmycar;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,25 +26,22 @@ public class LocationGPS implements
 
     private Context context;
     private List<ListItem> listItem;
-    private TextView tvMyCarLocation,tvState;
+    private TextView tvState;
+    private Button btMyCarLocation;
     private GoogleApiClient mGoogleApiClient;
 
     private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
     private long FASTEST_INTERVAL = 2000; /* 2 sec */
 
-    public LocationGPS(Context context,List<ListItem> listItem,TextView tvMyCarLocation,TextView tvState) {
+    public LocationGPS(Context context, List<ListItem> listItem, TextView tvState, Button btMyCarLocation) {
         this.context = context;
         this.listItem = listItem;
-        this.tvMyCarLocation = tvMyCarLocation;
         this.tvState = tvState;
-    }
-
-    public LocationGPS(Context context,List<ListItem> listItem) {
-        this.context = context;
-        this.listItem = listItem;
+        this.btMyCarLocation = btMyCarLocation;
     }
 
     public void startConnect() {
+        Log.i("startConnect","startConnect");
         mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -64,12 +59,13 @@ public class LocationGPS implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-// Get last known recent location.
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
+        Log.i("onConnected","onConnected");
+    // Get last known recent location.
+
+        Log.i("mCurrentLocation","mCurrentLocation");
         Location mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         // Note that this can be NULL if last location isn't already known.
+        Log.i("mCurrentLocation","mCurrentLocation:"+mCurrentLocation);
         if (mCurrentLocation != null) {
             // Print current location if not null
             Log.d("DEBUG", "current location: " + mCurrentLocation.toString());
@@ -90,33 +86,32 @@ public class LocationGPS implements
 
     // Trigger new location updates at interval
     protected void startLocationUpdates() {
+        Log.i("startLocationUpdates","startLocationUpdates");
         // Create the location request
         LocationRequest mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(UPDATE_INTERVAL)
                 .setFastestInterval(FASTEST_INTERVAL);
         // Request location updates
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
                 mLocationRequest, this);
     }
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.i("onLocationChanged","onLocationChanged");
         Location dest = new Location(location); // 取得現在位置
 
         float distance, min = 0;
         int minNumber = 0;
         for (int i = 0; i < listItem.size(); i++) {
-            Log.i("Latitude",listItem.get(i).getLatitude()+"");
-            Log.i("Longitude",listItem.get(i).getLongitude()+"");
+            Log.i("Latitude", listItem.get(i).getLatitude() + "");
+            Log.i("Longitude", listItem.get(i).getLongitude() + "");
             dest.setLatitude(listItem.get(i).getLatitude());
             dest.setLongitude(listItem.get(i).getLongitude());
             // 計算現在與所有地點距離 取出最近的
             distance = location.distanceTo(dest);
-            Log.i("distance",distance+"");
+            Log.i("distance", distance + "");
             if (i == 0) {
                 min = distance;
             }
@@ -124,16 +119,11 @@ public class LocationGPS implements
                 min = distance;
                 minNumber = i;
             }
-            Log.i("minNumber",minNumber+"");
+            Log.i("minNumber", minNumber + "");
         }
-        Log.i("minName",listItem.get(minNumber).getLocationName());
-
-        if (tvMyCarLocation != null) {
-            tvMyCarLocation.setText(listItem.get(minNumber).getLocationName());
-        }
-        if(tvState != null){
-            tvState.setText("定位完成");
-        }
+        Log.i("minName", listItem.get(minNumber).getLocationName());
+        tvState.setText("紀錄完成");
+        btMyCarLocation.setText(listItem.get(minNumber).getLocationName());
 
         Function funHelper = new Function(context);
         funHelper.setString("locationName", listItem.get(minNumber).getLocationName());

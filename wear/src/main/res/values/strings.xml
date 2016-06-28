@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">FindMyCar</string>
+
+    <string name="stateEnalbe">Enable</string>
+    <string name="stateDisalbe">Disable</string>
+
     <string name="intro_text">Long click to exit the map.</string>
 </resources>

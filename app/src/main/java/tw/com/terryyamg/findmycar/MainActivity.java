@@ -27,15 +27,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import static tw.com.terryyamg.findmycar.SetInfo.STATE_INFO;
-
 public class MainActivity extends Activity {
     private Function funHelper = new Function(this);
     private SQLiteDatabase db;
     private DBManager dbHelper;
     private Handler handler = new Handler();
 
-    private List<ListItem> listItem;
+    private List<ListItem> listItem,listItemEnable;
     private RecyclerView lvLocation;
     private CustomRecyclerViewAdapter adapter;
 
@@ -91,10 +89,9 @@ public class MainActivity extends Activity {
 		/* 標計車子位置 */
         ibMark.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-//                getCoordinatesGPS();
-                LocationGPS locationGPS = new LocationGPS(MainActivity.this, listItem, tvMyCarLocation);
+                tvState.setText("定位中。。。");
+                LocationGPS locationGPS = new LocationGPS(MainActivity.this, getEnableLocation(), tvMyCarLocation, tvState);
                 locationGPS.startConnect();
-                STATE_INFO = "定位中。。。";
             }
         });
 
@@ -114,10 +111,6 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
-
-        // 更新資訊
-        handler.removeCallbacks(updateTimer);
-        handler.postDelayed(updateTimer, 5000);
 
     }
 
@@ -166,26 +159,61 @@ public class MainActivity extends Activity {
 
     }
 
+    /*取出啟動地點*/
+    private List<ListItem> getEnableLocation(){
+        listItemEnable = new ArrayList<>();
+        String select = "SELECT * FROM location WHERE state = '1'";
+        Cursor cursor = db.rawQuery(select, null);
+        cursor.moveToFirst();
+        try {
+            do {
+                ListItem li = new ListItem();
+                li.setLocationID(cursor.getInt(0));// 地點id
+                li.setLocationName(cursor.getString(1));// 地點名稱
+                li.setLatitude(cursor.getDouble(2));// 緯度
+                li.setLongitude(cursor.getDouble(3));// 經度
+
+                String state = "";
+                switch (cursor.getInt(4)) {
+                    case 1:
+                        state = getResources().getString(R.string.stateEnalbe);
+                        break;
+                    case 0:
+                        state = getResources().getString(R.string.stateDisalbe);
+                        break;
+                    default:
+                        break;
+                }
+                li.setState(state);// 狀態
+
+                listItemEnable.add(li);
+
+            } while (cursor.moveToNext());
+
+        } catch (Exception e) {
+
+        } finally {
+            cursor.close();
+        }
+        return listItemEnable;
+    }
+
     private void showLoactionDialog(final int position) {
         final Dialog dialog = new Dialog(this);
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_item);
-
+        final TextView tvTitle = (TextView) dialog.findViewById(R.id.tvTitle);
         final Switch swEnable = (Switch) dialog.findViewById(R.id.swEnable);
         final Button btUpdate = (Button) dialog.findViewById(R.id.btUpdate);
         final Button btDelete = (Button) dialog.findViewById(R.id.btDelete);
 
+        tvTitle.setText(listItem.get(position).getLocationName());
         // 啟動或關閉
-        switch (listItem.get(position).getState()) {
-            case "Enable":
-                swEnable.setChecked(true);
-                break;
-            case "Disable":
-                swEnable.setChecked(false);
-                break;
-            default:
-                break;
+        if(listItem.get(position).getState().equals(getResources().getString(R.string.enable))){
+            swEnable.setChecked(true);
+        }else{
+            swEnable.setChecked(false);
         }
 
         swEnable.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -260,14 +288,6 @@ public class MainActivity extends Activity {
 
         dialog.show();
     }
-
-    // 更新資訊
-    private Runnable updateTimer = new Runnable() {
-        public void run() {
-            tvState.setText(STATE_INFO);
-            handler.postDelayed(this, 1000);
-        }
-    };
 
     @Override
     protected void onResume() {
