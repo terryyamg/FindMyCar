@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.LocationManager;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ public class MarkMyCar extends Service {
 
 	@Override
 	public void onCreate() {
+		Log.i("onCreate","onCreate");
 		dbHelper = new DBManager(this);
 		dbHelper.openDatabase();
 		db = dbHelper.getDatabase();
@@ -30,11 +32,12 @@ public class MarkMyCar extends Service {
 		getEnableLocation();
 		LocationGPS locationGPS = new LocationGPS(this,listItem);
 		locationGPS.startConnect();
-
+		Log.i("startConnect","startConnect");
 	}
 
 	@Override
 	public void onStart(Intent intent, int startId) {
+		Log.i("onStart","onStart");
 		LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 		if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 				|| !locationManager

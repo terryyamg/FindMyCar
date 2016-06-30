@@ -2,6 +2,7 @@ package tw.com.terryyamg.findmycar;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -142,7 +143,8 @@ public class LocationGPS implements
 
         //關閉
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-
+        Intent intent = new Intent(context, MarkMyCar.class);
+        context.stopService(intent);
         if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
         }
