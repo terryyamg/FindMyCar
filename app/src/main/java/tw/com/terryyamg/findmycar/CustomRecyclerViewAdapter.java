@@ -17,7 +17,7 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
     private List<ListItem> mItems;
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvLocationName,tvState;
+        public TextView tvLocationName, tvState;
 
         public CustomViewHolder(View view) {
             super(view);
@@ -26,7 +26,7 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
         }
     }
 
-    public CustomRecyclerViewAdapter(Context context,List<ListItem> items) {
+    public CustomRecyclerViewAdapter(Context context, List<ListItem> items) {
         this.mItems = items;
         this.mContext = context;
     }
@@ -43,7 +43,17 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
     public void onBindViewHolder(CustomViewHolder holder, int position) {
         //放入資料
         holder.tvLocationName.setText(mItems.get(position).getLocationName());
-        holder.tvState.setText(mItems.get(position).getState());
+        switch (mItems.get(position).getState()) {
+            case 1:
+                holder.tvState.setText(mContext.getResources().getString(R.string.stateEnalbe));
+                break;
+            case 0:
+                holder.tvState.setText(mContext.getResources().getString(R.string.stateDisalbe));
+                break;
+            default:
+                break;
+        }
+
     }
 
     @Override

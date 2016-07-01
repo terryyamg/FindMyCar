@@ -23,5 +23,6 @@
     <string name="stateDisalbe">關閉</string>
     <string name="here">車子在這裡</string>
     <string name="gps_close">GPS尚未開啟</string>
+    <string name="transportToWear">傳輸</string>
 
 </resources>

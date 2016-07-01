@@ -5,31 +5,52 @@
     android:background="@drawable/background"
     android:orientation="vertical">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
 
         <Button
             android:id="@+id/btMap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:layout_margin="5dp"
             android:background="@drawable/button_selector"
             android:text="@string/map"
-            android:textColor="@color/colorButtonText" />
+            android:textColor="@color/colorButtonText"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:id="@+id/btTransport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@drawable/button_selector"
+            android:text="@string/transportToWear"
+            android:textColor="@color/colorButtonText"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/btAdded"
+            android:layout_marginEnd="29dp" />
 
         <Button
             android:id="@+id/btAdded"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_margin="5dp"
             android:background="@drawable/button_selector"
             android:text="@string/added"
-            android:textColor="@color/colorButtonText" />
+            android:textColor="@color/colorButtonText"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_alignTop="@+id/btMap"
+            android:layout_alignParentEnd="true" />
 
-    </FrameLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

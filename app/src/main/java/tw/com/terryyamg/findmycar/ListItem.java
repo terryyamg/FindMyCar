@@ -2,14 +2,14 @@ package tw.com.terryyamg.findmycar;
 
 public class ListItem {
 
-	private int locationID;
-	private String locationName, state;
+	private int locationID,state;
+	private String locationName;
 	private double latitude,longitude;
 
 	public ListItem() {
 	}
 
-	public ListItem(int locationID,String locationName,double latitude,double longitude,String state) {
+	public ListItem(int locationID,String locationName,double latitude,double longitude,int state) {
 		this.locationID = locationID;
 		this.locationName = locationName;
 		this.latitude = latitude;
@@ -54,11 +54,11 @@ public class ListItem {
 	}
 
 	// 狀態
-	public String getState() {
+	public int getState() {
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(int state) {
 		this.state = state;
 	}
 	

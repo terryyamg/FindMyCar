@@ -23,5 +23,6 @@
     <string name="stateDisalbe">閉める</string>
     <string name="here">ここで車</string>
     <string name="gps_close">開いていません</string>
+    <string name="transportToWear">輸送</string>
 
 </resources>

@@ -70,18 +70,7 @@ public class MarkMyCar extends Service {
 				li.setLocationName(cursor.getString(1));// 地點名稱
 				li.setLatitude(cursor.getDouble(2));// 緯度
 				li.setLongitude(cursor.getDouble(3));// 經度
-				String state = "";
-				switch (cursor.getInt(4)) {
-					case 1:
-						state = getResources().getString(R.string.stateEnalbe);
-						break;
-					case 0:
-						state = getResources().getString(R.string.stateDisalbe);
-						break;
-					default:
-						break;
-				}
-				li.setState(state);// 狀態
+				li.setState(cursor.getInt(4));// 狀態
 				listItem.add(li);
 			} while (cursor.moveToNext());
 

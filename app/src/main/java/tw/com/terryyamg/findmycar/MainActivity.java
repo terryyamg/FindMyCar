@@ -9,11 +9,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -24,20 +26,26 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.Wearable;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
+    private GoogleApiClient googleClient;
     private Function funHelper = new Function(this);
     private SQLiteDatabase db;
     private DBManager dbHelper;
-    private Handler handler = new Handler();
 
-    private List<ListItem> listItem,listItemEnable;
+    private List<ListItem> listItem, listItemEnable;
     private RecyclerView lvLocation;
     private CustomRecyclerViewAdapter adapter;
 
     private TextView tvMyCarLocation, tvState;
+    private StringBuilder message;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,8 +56,16 @@ public class MainActivity extends Activity {
         tvState = (TextView) findViewById(R.id.tvState);
         ImageButton ibMark = (ImageButton) findViewById(R.id.ibMark);
         Button btMap = (Button) findViewById(R.id.btMap);
+        Button btTransport = (Button) findViewById(R.id.btTransport);
         Button btAdded = (Button) findViewById(R.id.btAdded);
         lvLocation = (RecyclerView) findViewById(R.id.lvLoaction);
+
+        //wear
+        googleClient = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
 
         dbHelper = new DBManager(this);
         dbHelper.openDatabase();
@@ -103,6 +119,45 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+        /* 傳送資料至腕錶*/
+        btTransport.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                //取得資料
+                message = new StringBuilder();
+                for (int i = 0; i < listItem.size(); i++) {
+                    if (i == 0) {
+                        message.append("[{");
+                    }
+
+                    String id = Integer.toString(listItem.get(i).getLocationID());
+                    String name = listItem.get(i).getLocationName();
+                    String lat = Double.toString(listItem.get(i).getLatitude());
+                    String lon = Double.toString(listItem.get(i).getLongitude());
+                    String state = Integer.toString(listItem.get(i).getState());
+                    // [{"id":"0","name":"xxx"},{"id":"1","name":"ooo"}]
+                    message.append("\"id\":\"" + id + "\"");
+                    message.append(",");
+                    message.append("\"name\":\"" + name + "\"");
+                    message.append(",");
+                    message.append("\"lat\":\"" + lat + "\"");
+                    message.append(",");
+                    message.append("\"lon\":\"" + lon + "\"");
+                    message.append(",");
+                    message.append("\"state\":\"" + state + "\"");
+
+                    if (i == listItem.size() - 1) {
+                        message.append("}]");
+                    } else {
+                        message.append("},{");
+                    }
+                }
+
+                Log.i("message", message + "");
+                googleClient.connect();
+            }
+        });
+
         /* 新增地點 */
         btAdded.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
@@ -131,20 +186,7 @@ public class MainActivity extends Activity {
                 li.setLocationName(cursor.getString(1));// 地點名稱
                 li.setLatitude(cursor.getDouble(2));// 緯度
                 li.setLongitude(cursor.getDouble(3));// 經度
-
-                String state = "";
-                switch (cursor.getInt(4)) {
-                    case 1:
-                        state = getResources().getString(R.string.stateEnalbe);
-                        break;
-                    case 0:
-                        state = getResources().getString(R.string.stateDisalbe);
-                        break;
-                    default:
-                        break;
-                }
-                li.setState(state);// 狀態
-
+                li.setState(cursor.getInt(4));// 狀態
                 listItem.add(li);
 
             } while (cursor.moveToNext());
@@ -160,7 +202,7 @@ public class MainActivity extends Activity {
     }
 
     /*取出啟動地點*/
-    private List<ListItem> getEnableLocation(){
+    private List<ListItem> getEnableLocation() {
         listItemEnable = new ArrayList<>();
         String select = "SELECT * FROM location WHERE state = '1'";
         Cursor cursor = db.rawQuery(select, null);
@@ -172,20 +214,7 @@ public class MainActivity extends Activity {
                 li.setLocationName(cursor.getString(1));// 地點名稱
                 li.setLatitude(cursor.getDouble(2));// 緯度
                 li.setLongitude(cursor.getDouble(3));// 經度
-
-                String state = "";
-                switch (cursor.getInt(4)) {
-                    case 1:
-                        state = getResources().getString(R.string.stateEnalbe);
-                        break;
-                    case 0:
-                        state = getResources().getString(R.string.stateDisalbe);
-                        break;
-                    default:
-                        break;
-                }
-                li.setState(state);// 狀態
-
+                li.setState(cursor.getInt(4));// 狀態
                 listItemEnable.add(li);
 
             } while (cursor.moveToNext());
@@ -210,9 +239,9 @@ public class MainActivity extends Activity {
 
         tvTitle.setText(listItem.get(position).getLocationName());
         // 啟動或關閉
-        if(listItem.get(position).getState().equals(getResources().getString(R.string.enable))){
+        if (listItem.get(position).getState() == 1) {
             swEnable.setChecked(true);
-        }else{
+        } else {
             swEnable.setChecked(false);
         }
 
@@ -301,5 +330,30 @@ public class MainActivity extends Activity {
         dbHelper.closeDatabase();
         // android.os.Process.killProcess(android.os.Process.myPid());
 
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.i("onConnected","onConnected");
+        new WearConnect("/db_data", message.toString(), googleClient).start();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (null != googleClient && googleClient.isConnected()) {
+            googleClient.disconnect();
+        }
+        Log.i("onStop", "onStop");
     }
 }

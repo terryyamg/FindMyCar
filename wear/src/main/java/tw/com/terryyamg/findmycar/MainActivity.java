@@ -1,15 +1,24 @@
 package tw.com.terryyamg.findmycar;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.view.WatchViewStub;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +38,10 @@ public class MainActivity extends Activity {
         dbHelper.openDatabase();
         db = dbHelper.getDatabase();
 
-
+        // Register the local broadcast receiver
+        IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
+        MessageReceiver messageReceiver = new MessageReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, messageFilter);
 
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
@@ -47,14 +59,14 @@ public class MainActivity extends Activity {
                     public void onClick(View v) {
                         getEnableLocation();
                         tvState.setText("紀錄中。。。");
-                        LocationGPS locationGPS = new LocationGPS(MainActivity.this,listItem,tvState,btMyCarLocation);
+                        LocationGPS locationGPS = new LocationGPS(MainActivity.this, listItem, tvState, btMyCarLocation);
                         locationGPS.startConnect();
                     }
                 });
                 btMyCarLocation.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this,MapsActivity.class);
+                        Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                         startActivity(intent);
                     }
                 });
@@ -96,6 +108,41 @@ public class MainActivity extends Activity {
             cursor.close();
         }
 
+    }
+
+    public class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String message = intent.getStringExtra("message");
+            Log.i("message", "message:" + message);
+            JSONArray jsonArray;
+            String id, name, lat, lon, state;
+            try {
+                jsonArray = new JSONArray(message);
+                Log.i("length",jsonArray.length()+"");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonData = jsonArray.getJSONObject(i);
+                    id = jsonData.getString("id");
+                    name = jsonData.getString("name");
+                    lat = jsonData.getString("lat");
+                    lon = jsonData.getString("lon");
+                    state = jsonData.getString("state");
+                    Log.i("i",i+"");
+                    Log.i("id",id);
+                    Log.i("name",name);
+                    Log.i("lat",lat);
+                    Log.i("lon",lon);
+                    Log.i("state",state);
+                }
+
+                Toast.makeText(MainActivity.this, "資料傳輸", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Log.i("e", e + "");
+            }
+            Log.v("MessageActivity", "Main activity received message: " + message);
+            // Display message in UI
+        }
     }
 
     @Override
