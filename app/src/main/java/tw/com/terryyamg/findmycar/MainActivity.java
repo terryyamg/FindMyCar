@@ -26,6 +26,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
@@ -51,6 +53,12 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //ad
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("43418FAE080D9E74F91D761B77604321").build();
+        mAdView.loadAd(adRequest);
 
         tvMyCarLocation = (TextView) findViewById(R.id.tvMyCarLocation);
         tvState = (TextView) findViewById(R.id.tvState);

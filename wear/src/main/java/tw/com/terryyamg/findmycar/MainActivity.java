@@ -117,23 +117,25 @@ public class MainActivity extends Activity {
             String message = intent.getStringExtra("message");
             Log.i("message", "message:" + message);
             JSONArray jsonArray;
-            String id, name, lat, lon, state;
+            String name, lat, lon, state;
             try {
                 jsonArray = new JSONArray(message);
                 Log.i("length",jsonArray.length()+"");
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonData = jsonArray.getJSONObject(i);
-                    id = jsonData.getString("id");
                     name = jsonData.getString("name");
                     lat = jsonData.getString("lat");
                     lon = jsonData.getString("lon");
                     state = jsonData.getString("state");
-                    Log.i("i",i+"");
-                    Log.i("id",id);
-                    Log.i("name",name);
-                    Log.i("lat",lat);
-                    Log.i("lon",lon);
-                    Log.i("state",state);
+                    //刪除資料
+                    String delete = "DELETE FROM location";
+                    String update = "UPDATE sqlite_sequence SET seq=0 WHERE name='location'";
+                    db.execSQL(delete);
+                    db.execSQL(update);
+                    //新增資料
+                    String insert = "INSERT INTO location(name, latitude, longitude, state) VALUES ('"
+                            + name + "','" + lat + "','" + lon + "','"+state+"')";
+                    db.execSQL(insert);
                 }
 
                 Toast.makeText(MainActivity.this, "資料傳輸", Toast.LENGTH_SHORT).show();

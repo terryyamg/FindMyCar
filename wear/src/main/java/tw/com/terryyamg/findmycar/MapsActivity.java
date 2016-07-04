@@ -109,7 +109,10 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         mMap.setMyLocationEnabled(true);
 
         // Add a marker in Sydney, Australia and move the camera.
-        sydney = new LatLng(22.6646, 120.3044);
+        Function funHelper = new Function(this);
+        double lat = Double.parseDouble(funHelper.getString("latitude"));
+        double lon = Double.parseDouble(funHelper.getString("longitude"));
+        sydney = new LatLng(lat, lon);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Car in Here"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
