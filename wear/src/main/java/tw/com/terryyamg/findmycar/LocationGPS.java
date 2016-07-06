@@ -122,13 +122,13 @@ public class LocationGPS implements
             Log.i("minNumber", minNumber + "");
         }
         Log.i("minName", listItem.get(minNumber).getLocationName());
-        tvState.setText("紀錄完成");
+        tvState.setText(context.getResources().getString(R.string.record_finish));
         btMyCarLocation.setText(listItem.get(minNumber).getLocationName());
 
         Function funHelper = new Function(context);
         funHelper.setString("locationName", listItem.get(minNumber).getLocationName());
-        funHelper.setString("latitude", Double.toString(listItem.get(minNumber).getLatitude()));
-        funHelper.setString("longitude", Double.toString(listItem.get(minNumber).getLongitude()));
+        funHelper.setString("latitude", Double.toString(dest.getLatitude()));
+        funHelper.setString("longitude", Double.toString(dest.getLongitude()));
 
         //關閉
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);

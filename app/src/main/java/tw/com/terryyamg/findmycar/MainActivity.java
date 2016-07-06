@@ -85,7 +85,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || !locationManager
                 .isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            Toast.makeText(this, "前往開啟GPS", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.gps_close), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);
         }
@@ -113,7 +113,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 		/* 標計車子位置 */
         ibMark.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                tvState.setText("定位中。。。");
+                tvState.setText(getResources().getString(R.string.positioning));
                 LocationGPS locationGPS = new LocationGPS(MainActivity.this, getEnableLocation(), tvMyCarLocation, tvState);
                 locationGPS.startConnect();
             }
@@ -295,9 +295,9 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(
                         MainActivity.this);
                 alertDialog.setMessage(getResources().getString(
-                        R.string.ConfirmDelete));
+                        R.string.confirm_delete));
 
-                alertDialog.setPositiveButton(R.string.confirmYes,
+                alertDialog.setPositiveButton(R.string.confirm_yes,
                         new DialogInterface.OnClickListener() {
                             public void onClick(
                                     DialogInterface dialoginterface, int i) {
@@ -309,7 +309,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                                 dialog.dismiss();
                             }
                         });
-                alertDialog.setNegativeButton(R.string.confirmNo,
+                alertDialog.setNegativeButton(R.string.confirm_no,
                         new DialogInterface.OnClickListener() {
                             public void onClick(
                                     DialogInterface dialoginterface, int i) {

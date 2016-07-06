@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:background="@drawable/button_selector"
-            android:text="@string/transportToWear"
+            android:text="@string/transport_to_wear"
             android:textColor="@color/colorButtonText"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"

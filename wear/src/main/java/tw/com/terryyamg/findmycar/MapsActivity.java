@@ -113,7 +113,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         double lat = Double.parseDouble(funHelper.getString("latitude"));
         double lon = Double.parseDouble(funHelper.getString("longitude"));
         sydney = new LatLng(lat, lon);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Car in Here"));
+        mMap.addMarker(new MarkerOptions().position(sydney).title(getResources().getString(R.string.here)));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
 

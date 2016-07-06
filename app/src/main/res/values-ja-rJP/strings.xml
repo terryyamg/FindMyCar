@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">車を取得</string>
-    <string name="find_my_car">車を取得</string>
+    <string name="app_name">捜す車</string>
+    <string name="find_my_car">捜す車</string>
     <string name="location_name">所処敘述</string>
     <string name="coordinates">得られた座標</string>
-    <string name="coordinates_gps">場所</string>
+    <string name="coordinates_gps">位置づけ</string>
     <string name="coordinates_map">地図</string>
     <string name="latitude">緯度</string>
     <string name="longitude">経線</string>
@@ -16,13 +16,15 @@
     <string name="enable">出足</string>
     <string name="update">変更</string>
     <string name="delete">削除</string>
-    <string name="ConfirmDelete">確認削除?</string>
-    <string name="confirmYes">はい</string>
-    <string name="confirmNo">いいえ</string>
-    <string name="stateEnalbe">出足</string>
-    <string name="stateDisalbe">閉める</string>
+    <string name="confirm_delete">確認削除?</string>
+    <string name="confirm_yes">はい</string>
+    <string name="confirm_no">いいえ</string>
+    <string name="state_enalbe">出足</string>
+    <string name="state_disalbe">閉める</string>
     <string name="here">ここで車</string>
     <string name="gps_close">開いていません</string>
-    <string name="transportToWear">輸送</string>
+    <string name="transport_to_wear">輸送</string>
+    <string name="record_finish">記録完了</string>
+    <string name="positioning">位置づけている</string>
 
 </resources>

@@ -133,13 +133,14 @@ public class LocationGPS implements
             tvMyCarLocation.setText(listItem.get(minNumber).getLocationName());
         }
         if(tvState != null){
-            tvState.setText("定位完成");
+            tvState.setText(context.getString(R.string.record_finish));
         }
 
         Function funHelper = new Function(context);
         funHelper.setString("locationName", listItem.get(minNumber).getLocationName());
-        funHelper.setString("latitude", Double.toString(listItem.get(minNumber).getLatitude()));
-        funHelper.setString("longitude", Double.toString(listItem.get(minNumber).getLongitude()));
+        funHelper.setString("latitude", Double.toString(dest.getLatitude()));
+        funHelper.setString("longitude", Double.toString(dest.getLongitude()));
+
 
         //關閉
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);

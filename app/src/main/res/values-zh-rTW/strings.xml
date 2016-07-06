@@ -16,13 +16,15 @@
     <string name="enable">啟動</string>
     <string name="update">修改</string>
     <string name="delete">刪除</string>
-    <string name="ConfirmDelete">確認刪除?</string>
-    <string name="confirmYes">是</string>
-    <string name="confirmNo">否</string>
-    <string name="stateEnalbe">啟動</string>
-    <string name="stateDisalbe">關閉</string>
+    <string name="confirm_delete">確認刪除?</string>
+    <string name="confirm_yes">是</string>
+    <string name="confirm_no">否</string>
+    <string name="state_enalbe">啟動</string>
+    <string name="state_disalbe">關閉</string>
     <string name="here">車子在這裡</string>
     <string name="gps_close">GPS尚未開啟</string>
-    <string name="transportToWear">傳輸</string>
+    <string name="transport_to_wear">傳輸</string>
+    <string name="record_finish">紀錄完成</string>
+    <string name="positioning">定位中</string>
 
 </resources>

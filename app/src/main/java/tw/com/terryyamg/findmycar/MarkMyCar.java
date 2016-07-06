@@ -42,7 +42,7 @@ public class MarkMyCar extends Service {
 		if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 				|| !locationManager
 				.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-			Toast.makeText(this, "GPS沒開唷", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getResources().getString(R.string.gps_close), Toast.LENGTH_SHORT).show();
 		}
 
 		ComponentName thisWidget = new ComponentName(this, LittleWidget.class);

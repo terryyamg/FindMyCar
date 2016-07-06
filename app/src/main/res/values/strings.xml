@@ -11,20 +11,22 @@
     <string name="longitude">Longitude</string>
     <string name="map">Map</string>
     <string name="added">Added</string>
-    <string name="transportToWear">Transport</string>
+    <string name="transport_to_wear">Transport</string>
     <string name="confirm">Confirm</string>
     <string name="location_name_empty">Location Name Can Not Be Empty</string>
     <string name="enable">Enable</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
-    <string name="ConfirmDelete">Confirm to delete this?</string>
-    <string name="confirmYes">YES</string>
-    <string name="confirmNo">NO</string>
-    <string name="stateEnalbe">Enable</string>
-    <string name="stateDisalbe">Disable</string>
+    <string name="confirm_delete">Confirm to delete this?</string>
+    <string name="confirm_yes">YES</string>
+    <string name="confirm_no">NO</string>
+    <string name="state_enalbe">Enable</string>
+    <string name="state_disalbe">Disable</string>
     <string name="here">Car In Here</string>
     <string name="gps_close">GPS NOT OPEN</string>
 
     <string name="banner_ad_unit_id">ca-app-pub-4805725849347372/3003128648</string>
+    <string name="record_finish">Record Finish</string>
+    <string name="positioning">Positioning</string>
 
 </resources>

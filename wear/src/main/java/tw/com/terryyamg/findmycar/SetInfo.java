@@ -9,7 +9,4 @@ public class SetInfo {
 	public static String DB_PATH = "/data"
 			+ Environment.getDataDirectory().getAbsolutePath() + "/"
 			+ PACKAGE_NAME;// 在手機裡存放資料庫的位置(/data/data/tw.com.terryyamg)
-	public static String ADD_LATITUDE = "0.0";
-	public static String ADD_LONGITUDE = "0.0";
-	public static String STATE_INFO ="";
 }

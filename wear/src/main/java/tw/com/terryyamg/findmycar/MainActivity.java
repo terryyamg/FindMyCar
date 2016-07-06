@@ -58,7 +58,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void onClick(View v) {
                         getEnableLocation();
-                        tvState.setText("紀錄中。。。");
+                        tvState.setText(getResources().getString(R.string.positioning));
                         LocationGPS locationGPS = new LocationGPS(MainActivity.this, listItem, tvState, btMyCarLocation);
                         locationGPS.startConnect();
                     }
@@ -87,18 +87,8 @@ public class MainActivity extends Activity {
                 li.setLocationName(cursor.getString(1));// 地點名稱
                 li.setLatitude(cursor.getDouble(2));// 緯度
                 li.setLongitude(cursor.getDouble(3));// 經度
-                String state = "";
-                switch (cursor.getInt(4)) {
-                    case 1:
-                        state = getResources().getString(R.string.stateEnalbe);
-                        break;
-                    case 0:
-                        state = getResources().getString(R.string.stateDisalbe);
-                        break;
-                    default:
-                        break;
-                }
-                li.setState(state);// 狀態
+                li.setState(cursor.getInt(4));// 狀態
+
                 listItem.add(li);
             } while (cursor.moveToNext());
 
@@ -138,7 +128,7 @@ public class MainActivity extends Activity {
                     db.execSQL(insert);
                 }
 
-                Toast.makeText(MainActivity.this, "資料傳輸", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.transport_data), Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Log.i("e", e + "");
             }

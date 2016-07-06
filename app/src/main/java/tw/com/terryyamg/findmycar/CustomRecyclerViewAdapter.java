@@ -45,10 +45,10 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<CustomRecycl
         holder.tvLocationName.setText(mItems.get(position).getLocationName());
         switch (mItems.get(position).getState()) {
             case 1:
-                holder.tvState.setText(mContext.getResources().getString(R.string.stateEnalbe));
+                holder.tvState.setText(mContext.getResources().getString(R.string.state_enalbe));
                 break;
             case 0:
-                holder.tvState.setText(mContext.getResources().getString(R.string.stateDisalbe));
+                holder.tvState.setText(mContext.getResources().getString(R.string.state_disalbe));
                 break;
             default:
                 break;
