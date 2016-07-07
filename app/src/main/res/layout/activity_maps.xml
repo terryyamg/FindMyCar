@@ -13,12 +13,12 @@
     </fragment>
 
     <Button
-            android:id="@+id/btMove"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/button_selector"
-            android:text="@string/find_my_car"
-            android:textColor="#FFFFFF" />
-    
+        android:id="@+id/btMove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/button_selector"
+        android:text="@string/find_my_car"
+        android:textColor="#FFFFFF" />
+
 </RelativeLayout>

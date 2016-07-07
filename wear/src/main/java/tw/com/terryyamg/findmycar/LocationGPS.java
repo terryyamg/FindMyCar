@@ -3,6 +3,7 @@ package tw.com.terryyamg.findmycar;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -124,6 +125,9 @@ public class LocationGPS implements
         Log.i("minName", listItem.get(minNumber).getLocationName());
         tvState.setText(context.getResources().getString(R.string.record_finish));
         btMyCarLocation.setText(listItem.get(minNumber).getLocationName());
+
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(500); // 半秒
 
         Function funHelper = new Function(context);
         funHelper.setString("locationName", listItem.get(minNumber).getLocationName());

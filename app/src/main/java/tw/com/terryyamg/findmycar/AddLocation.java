@@ -97,7 +97,7 @@ public class AddLocation extends Activity implements
 		/* 地圖取得座標 */
 		btMap.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(AddLocation.this, MapMyCar.class);
+				Intent intent = new Intent(AddLocation.this, MapsActivity.class);
 				intent.putExtra("toMapMyCar", 1);
 				startActivity(intent);
 			}

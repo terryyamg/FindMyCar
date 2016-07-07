@@ -51,9 +51,9 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         //ad
         AdView mAdView = (AdView) findViewById(R.id.adView);
 //        AdRequest adRequest = new AdRequest.Builder().build();
@@ -122,7 +122,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 		/* 地圖位置 */
         btMap.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MapMyCar.class);
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                 intent.putExtra("toMapMyCar", 0);
                 startActivity(intent);
             }
