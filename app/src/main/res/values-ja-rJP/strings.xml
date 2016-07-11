@@ -26,5 +26,7 @@
     <string name="transport_to_wear">輸送</string>
     <string name="record_finish">記録完了</string>
     <string name="positioning">位置づけている</string>
+    <string name="introduction">説明</string>
+    <string name="transport_to_wear_title">腕時計に転送</string>
 
 </resources>

@@ -178,6 +178,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
         if (from == 0) {
+            mMap.clear();
             Location dest = new Location(location); // 取得現在位置
             Log.i("lat", dest.getLatitude() + "");
             Log.i("lon", dest.getLongitude() + "");

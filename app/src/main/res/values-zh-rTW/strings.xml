@@ -11,7 +11,7 @@
     <string name="longitude">經度</string>
     <string name="map">地圖</string>
     <string name="added">新增</string>
-    <string name="confirm">確認輸入</string>
+    <string name="confirm">確認</string>
     <string name="location_name_empty">忘記輸入地點描述囉</string>
     <string name="enable">啟動</string>
     <string name="update">修改</string>
@@ -26,5 +26,7 @@
     <string name="transport_to_wear">傳輸</string>
     <string name="record_finish">紀錄完成</string>
     <string name="positioning">定位中</string>
+    <string name="introduction">說明</string>
+    <string name="transport_to_wear_title">傳輸到手錶</string>
 
 </resources>

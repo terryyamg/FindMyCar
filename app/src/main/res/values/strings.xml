@@ -12,6 +12,8 @@
     <string name="map">Map</string>
     <string name="added">Added</string>
     <string name="transport_to_wear">Transport</string>
+    <string name="transport_to_wear_title">Transport To Wear</string>
+    <string name="introduction">Introduction</string>
     <string name="confirm">Confirm</string>
     <string name="location_name_empty">Location Name Can Not Be Empty</string>
     <string name="enable">Enable</string>

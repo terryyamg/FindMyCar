@@ -11,6 +11,8 @@ import android.widget.RemoteViews;
 
 public class LittleWidget extends AppWidgetProvider {
 
+	private static final String SYNC_CLICKED = "click";
+
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
 			int[] appWidgetIds) {
 		final int IDs = appWidgetIds.length;
@@ -31,7 +33,7 @@ public class LittleWidget extends AppWidgetProvider {
 		// 綁定Clock_widget注意androidmanifest receiver需註冊action
 		final Intent refreshIntent = new Intent(context, LittleWidget.class);
 		// set action字串
-		refreshIntent.setAction("click");
+		refreshIntent.setAction(SYNC_CLICKED);
 		final PendingIntent refreshPendingIntent = PendingIntent.getBroadcast(
 				context, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -53,11 +55,13 @@ public class LittleWidget extends AppWidgetProvider {
 	public void onReceive(Context context, Intent intent) {
 		super.onReceive(context, intent);
 		Log.i("onReceive","onReceive");
-		// 綁定service
-		Intent intent1 = new Intent(context, MarkMyCar.class);
-		// 啟動服務
-		context.startService(intent1);
-
+		Log.i("getAction",intent.getAction()+"");
+		if (SYNC_CLICKED.equals(intent.getAction())) {
+			// 綁定service
+			Intent intent1 = new Intent(context, MarkMyCar.class);
+			// 啟動服務
+			context.startService(intent1);
+		}
 	}
 
 }

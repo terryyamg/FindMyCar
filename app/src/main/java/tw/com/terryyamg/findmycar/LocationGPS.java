@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -141,6 +142,8 @@ public class LocationGPS implements
         funHelper.setString("latitude", Double.toString(dest.getLatitude()));
         funHelper.setString("longitude", Double.toString(dest.getLongitude()));
 
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(500); // 半秒
 
         //關閉
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);

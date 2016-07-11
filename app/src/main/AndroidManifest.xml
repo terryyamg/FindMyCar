@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".MyApplication"
@@ -32,10 +32,13 @@
             </intent-filter>
         </activity>
 
-        <!-- AddLocation -->
-        <activity android:name=".AddLocation" />
+
         <!--MapsActivity-->
         <activity android:name=".MapsActivity" />
+        <!--Introduction-->
+        <activity android:name=".Introduction" />
+        <!-- AddLocation -->
+        <activity android:name=".AddLocation" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />

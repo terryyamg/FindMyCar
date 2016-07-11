@@ -11,7 +11,7 @@
     <string name="longitude">经度</string>
     <string name="map">地图</string>
     <string name="added">新增</string>
-    <string name="confirm">确认输入</string>
+    <string name="confirm">确认</string>
     <string name="location_name_empty">忘记输入地点描述啰</string>
     <string name="enable">启动</string>
     <string name="update">修改</string>
@@ -26,4 +26,6 @@
     <string name="transport_to_wear">传输</string>
     <string name="record_finish">纪录完成</string>
     <string name="positioning">定位中</string>
+    <string name="introduction">说明</string>
+    <string name="transport_to_wear_title">传输到手表</string>
 </resources>

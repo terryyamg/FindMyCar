@@ -56,7 +56,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         setContentView(R.layout.activity_main);
         //ad
         AdView mAdView = (AdView) findViewById(R.id.adView);
-//        AdRequest adRequest = new AdRequest.Builder().build();
+        // AdRequest adRequest = new AdRequest.Builder().build();
         AdRequest adRequest = new AdRequest.Builder().addTestDevice("43418FAE080D9E74F91D761B77604321").build();
         mAdView.loadAd(adRequest);
 
@@ -65,6 +65,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         ImageButton ibMark = (ImageButton) findViewById(R.id.ibMark);
         Button btMap = (Button) findViewById(R.id.btMap);
         Button btTransport = (Button) findViewById(R.id.btTransport);
+        Button btIntroduction = (Button) findViewById(R.id.btIntroduction);
         Button btAdded = (Button) findViewById(R.id.btAdded);
         lvLocation = (RecyclerView) findViewById(R.id.lvLoaction);
 
@@ -131,38 +132,57 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         /* 傳送資料至腕錶*/
         btTransport.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                //取得資料
-                message = new StringBuilder();
-                for (int i = 0; i < listItem.size(); i++) {
-                    if (i == 0) {
-                        message.append("[{");
-                    }
+                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                dialog.setTitle(getResources().getString(R.string.transport_to_wear))
+                        .setMessage(getResources().getString(R.string.transport_to_wear_title))
+                        .setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int j) {
+                                //取得資料
+                                message = new StringBuilder();
+                                for (int i = 0; i < listItem.size(); i++) {
+                                    if (i == 0) {
+                                        message.append("[{");
+                                    }
 
-                    String id = Integer.toString(listItem.get(i).getLocationID());
-                    String name = listItem.get(i).getLocationName();
-                    String lat = Double.toString(listItem.get(i).getLatitude());
-                    String lon = Double.toString(listItem.get(i).getLongitude());
-                    String state = Integer.toString(listItem.get(i).getState());
-                    // [{"id":"0","name":"xxx"},{"id":"1","name":"ooo"}]
-                    message.append("\"id\":\"" + id + "\"");
-                    message.append(",");
-                    message.append("\"name\":\"" + name + "\"");
-                    message.append(",");
-                    message.append("\"lat\":\"" + lat + "\"");
-                    message.append(",");
-                    message.append("\"lon\":\"" + lon + "\"");
-                    message.append(",");
-                    message.append("\"state\":\"" + state + "\"");
+                                    String id = Integer.toString(listItem.get(i).getLocationID());
+                                    String name = listItem.get(i).getLocationName();
+                                    String lat = Double.toString(listItem.get(i).getLatitude());
+                                    String lon = Double.toString(listItem.get(i).getLongitude());
+                                    String state = Integer.toString(listItem.get(i).getState());
+                                    // [{"id":"0","name":"xxx"},{"id":"1","name":"ooo"}]
+                                    message.append("\"id\":\"" + id + "\"");
+                                    message.append(",");
+                                    message.append("\"name\":\"" + name + "\"");
+                                    message.append(",");
+                                    message.append("\"lat\":\"" + lat + "\"");
+                                    message.append(",");
+                                    message.append("\"lon\":\"" + lon + "\"");
+                                    message.append(",");
+                                    message.append("\"state\":\"" + state + "\"");
 
-                    if (i == listItem.size() - 1) {
-                        message.append("}]");
-                    } else {
-                        message.append("},{");
-                    }
-                }
+                                    if (i == listItem.size() - 1) {
+                                        message.append("}]");
+                                    } else {
+                                        message.append("},{");
+                                    }
+                                }
 
-                Log.i("message", message + "");
-                googleClient.connect();
+                                Log.i("message", message + "");
+                                googleClient.connect();
+                            }
+                        }).show();
+
+            }
+        });
+
+        /*說明*/
+        btIntroduction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Introduction.class);
+                intent.putExtra("toAddLocation", 0);
+                startActivity(intent);
             }
         });
 
@@ -342,7 +362,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.i("onConnected","onConnected");
+        Log.i("onConnected", "onConnected");
         new WearConnect("/db_data", message.toString(), googleClient).start();
     }
 

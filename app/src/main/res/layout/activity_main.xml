@@ -35,20 +35,6 @@
             android:layout_alignParentStart="true" />
 
         <Button
-            android:id="@+id/btTransport"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:background="@drawable/button_selector"
-            android:text="@string/transport_to_wear"
-            android:textColor="@color/colorButtonText"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/btAdded"
-            android:layout_marginEnd="29dp" />
-
-        <Button
             android:id="@+id/btAdded"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,6 +49,36 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <Button
+            android:id="@+id/btTransport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_selector"
+            android:text="@string/transport_to_wear"
+            android:textColor="@color/colorButtonText"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:id="@+id/btIntroduction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@drawable/button_selector"
+            android:text="@string/introduction"
+            android:textColor="@color/colorButtonText"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
