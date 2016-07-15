@@ -66,6 +66,8 @@ public class MainActivity extends Activity {
                 btMyCarLocation.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(funHelper.getString("locationName").equals(""))
+                            return;
                         Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                         startActivity(intent);
                     }

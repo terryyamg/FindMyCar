@@ -28,5 +28,6 @@
     <string name="positioning">位置づけている</string>
     <string name="introduction">説明</string>
     <string name="transport_to_wear_title">腕時計に転送</string>
+    <string name="permission_message"> あなたは場所へのアクセスを許可する必要があります</string>
 
 </resources>

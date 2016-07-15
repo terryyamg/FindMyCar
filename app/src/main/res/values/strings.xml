@@ -26,7 +26,7 @@
     <string name="state_disalbe">Disable</string>
     <string name="here">Car In Here</string>
     <string name="gps_close">GPS NOT OPEN</string>
-
+    <string name="permission_message">You need to allow access to Location</string>
     <string name="banner_ad_unit_id">ca-app-pub-4805725849347372/3003128648</string>
     <string name="record_finish">Record Finish</string>
     <string name="positioning">Positioning</string>

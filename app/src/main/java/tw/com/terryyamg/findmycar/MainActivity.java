@@ -1,17 +1,23 @@
 package tw.com.terryyamg.findmycar;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,17 +54,35 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
     private TextView tvMyCarLocation, tvState;
     private StringBuilder message;
+    final private int ACCESS_COARSE_LOCATION_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
+    final private int ACCESS_FINE_LOCATION_PERMISSIONS_REQUEST_READ_CONTACTS = 124;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         //ad
         AdView mAdView = (AdView) findViewById(R.id.adView);
         // AdRequest adRequest = new AdRequest.Builder().build();
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("43418FAE080D9E74F91D761B77604321").build();
+//        AdRequest adRequest = new AdRequest.Builder().addTestDevice("43418FAE080D9E74F91D761B77604321").build();
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("AF069AF27F8B630A0A87F78D7304C879").build();
         mAdView.loadAd(adRequest);
+
+        //shortcut
+        Intent shortcutIntent = new Intent(getApplicationContext(), MainActivity.class);
+        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        Intent addIntent = new Intent();
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getResources().getString(R.string.app_name));
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher));
+        addIntent.putExtra("duplicate", false);
+        addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+        getApplicationContext().sendBroadcast(addIntent);
 
         tvMyCarLocation = (TextView) findViewById(R.id.tvMyCarLocation);
         tvState = (TextView) findViewById(R.id.tvState);
@@ -67,7 +91,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         Button btTransport = (Button) findViewById(R.id.btTransport);
         Button btIntroduction = (Button) findViewById(R.id.btIntroduction);
         Button btAdded = (Button) findViewById(R.id.btAdded);
-        lvLocation = (RecyclerView) findViewById(R.id.lvLoaction);
+        lvLocation = (RecyclerView) findViewById(R.id.lvLocation);
 
         //wear
         googleClient = new GoogleApiClient.Builder(this)
@@ -151,16 +175,21 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                                     String lon = Double.toString(listItem.get(i).getLongitude());
                                     String state = Integer.toString(listItem.get(i).getState());
                                     // [{"id":"0","name":"xxx"},{"id":"1","name":"ooo"}]
-                                    message.append("\"id\":\"" + id + "\"");
-                                    message.append(",");
-                                    message.append("\"name\":\"" + name + "\"");
-                                    message.append(",");
-                                    message.append("\"lat\":\"" + lat + "\"");
-                                    message.append(",");
-                                    message.append("\"lon\":\"" + lon + "\"");
-                                    message.append(",");
-                                    message.append("\"state\":\"" + state + "\"");
-
+                                    message.append("\"id\":\"");
+                                    message.append(id);
+                                    message.append("\",");
+                                    message.append("\"name\":\"");
+                                    message.append(name);
+                                    message.append("\",");
+                                    message.append("\"lat\":\"");
+                                    message.append(lat);
+                                    message.append("\",");
+                                    message.append("\"lon\":\"");
+                                    message.append(lon);
+                                    message.append("\",");
+                                    message.append("\"state\":\"");
+                                    message.append(state);
+                                    message.append("\"");
                                     if (i == listItem.size() - 1) {
                                         message.append("}]");
                                     } else {
@@ -181,7 +210,6 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Introduction.class);
-                intent.putExtra("toAddLocation", 0);
                 startActivity(intent);
             }
         });
@@ -194,6 +222,25 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                 startActivity(intent);
             }
         });
+
+        // permission
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                showMessageOKCancel(getResources().getString(R.string.permission_message),
+                        new DialogInterface.OnClickListener() {
+                            @TargetApi(Build.VERSION_CODES.M)
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                requestPermissions(new String[] {Manifest.permission.ACCESS_COARSE_LOCATION},
+                                        ACCESS_COARSE_LOCATION_PERMISSIONS_REQUEST_READ_CONTACTS);
+                            }
+                        });
+                return;
+            }
+        }
 
     }
 
@@ -383,5 +430,33 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             googleClient.disconnect();
         }
         Log.i("onStop", "onStop");
+    }
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(MainActivity.this)
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case ACCESS_COARSE_LOCATION_PERMISSIONS_REQUEST_READ_CONTACTS:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    Log.i("Agree","Agree");
+                } else {
+                    // Permission Denied
+                    Log.i("Denied","Denied");
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        }
     }
 }

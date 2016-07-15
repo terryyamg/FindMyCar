@@ -117,7 +117,6 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
 
-
     }
 
     @Override

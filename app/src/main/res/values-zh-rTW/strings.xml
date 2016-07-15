@@ -28,5 +28,6 @@
     <string name="positioning">定位中</string>
     <string name="introduction">說明</string>
     <string name="transport_to_wear_title">傳輸到手錶</string>
+    <string name="permission_message">你需要允許訪問位置</string>
 
 </resources>
