@@ -7,4 +7,5 @@
     <string name="here">Car In Here</string>
 
     <string name="intro_text">Long click to exit the map.</string>
+    <string name="permission_message">You need to allow access to Location</string>
 </resources>

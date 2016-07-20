@@ -1,13 +1,22 @@
 package tw.com.terryyamg.findmycar;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
@@ -28,6 +37,7 @@ public class MainActivity extends Activity {
     private SQLiteDatabase db;
     private DBManager dbHelper;
     private List<ListItem> listItem;
+    final private int ACCESS_COARSE_LOCATION_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +47,25 @@ public class MainActivity extends Activity {
         dbHelper = new DBManager(this);
         dbHelper.openDatabase();
         db = dbHelper.getDatabase();
+
+        // permission
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                showMessageOKCancel(getResources().getString(R.string.permission_message),
+                        new DialogInterface.OnClickListener() {
+                            @TargetApi(Build.VERSION_CODES.M)
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                requestPermissions(new String[] {Manifest.permission.ACCESS_COARSE_LOCATION},
+                                        ACCESS_COARSE_LOCATION_PERMISSIONS_REQUEST_READ_CONTACTS);
+                            }
+                        });
+                return;
+            }
+        }
 
         // Register the local broadcast receiver
         IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
@@ -136,6 +165,34 @@ public class MainActivity extends Activity {
             }
             Log.v("MessageActivity", "Main activity received message: " + message);
             // Display message in UI
+        }
+    }
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(MainActivity.this)
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case ACCESS_COARSE_LOCATION_PERMISSIONS_REQUEST_READ_CONTACTS:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    Log.i("Agree","Agree");
+                } else {
+                    // Permission Denied
+                    Log.i("Denied","Denied");
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         }
     }
 

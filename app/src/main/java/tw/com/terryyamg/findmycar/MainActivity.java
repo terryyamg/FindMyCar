@@ -55,7 +55,6 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     private TextView tvMyCarLocation, tvState;
     private StringBuilder message;
     final private int ACCESS_COARSE_LOCATION_PERMISSIONS_REQUEST_READ_CONTACTS = 123;
-    final private int ACCESS_FINE_LOCATION_PERMISSIONS_REQUEST_READ_CONTACTS = 124;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,7 +125,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         lvLocation.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), lvLocation, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                showLoactionDialog(position);
+                showLocationDialog(position);
             }
 
             @Override
@@ -302,7 +301,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         return listItemEnable;
     }
 
-    private void showLoactionDialog(final int position) {
+    private void showLocationDialog(final int position) {
         final Dialog dialog = new Dialog(this);
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
