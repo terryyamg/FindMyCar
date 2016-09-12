@@ -4,7 +4,6 @@ import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.LocationManager;
 import android.os.IBinder;
@@ -12,7 +11,6 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MarkMyCar extends Service {
@@ -29,7 +27,10 @@ public class MarkMyCar extends Service {
 		dbHelper.openDatabase();
 		db = dbHelper.getDatabase();
 
-		getEnableLocation();
+		/* 列出地點 */
+		MarkMyCarPresenter mmcp = new MarkMyCarPresenterImpl(db);
+		mmcp.selectEnableLocationData();
+
 		LocationGPS locationGPS = new LocationGPS(this,listItem);
 		locationGPS.startConnect();
 		Log.i("startConnect","startConnect");
@@ -54,31 +55,6 @@ public class MarkMyCar extends Service {
 		remoteViews.setTextViewText(R.id.tvMyCarLocation, showLocationName);
 
 		manager.updateAppWidget(thisWidget, remoteViews);
-
-	}
-
-	/* 列出地點 */
-	private void getEnableLocation() {
-		listItem = new ArrayList<>();
-		String select = "SELECT * FROM location WHERE state = '1'";
-		Cursor cursor = db.rawQuery(select, null);
-		cursor.moveToFirst();
-		try {
-			do {
-				ListItem li = new ListItem();
-				li.setLocationID(cursor.getInt(0));// 地點id
-				li.setLocationName(cursor.getString(1));// 地點名稱
-				li.setLatitude(cursor.getDouble(2));// 緯度
-				li.setLongitude(cursor.getDouble(3));// 經度
-				li.setState(cursor.getInt(4));// 狀態
-				listItem.add(li);
-			} while (cursor.moveToNext());
-
-		} catch (Exception e) {
-
-		} finally {
-			cursor.close();
-		}
 
 	}
 

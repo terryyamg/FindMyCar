@@ -31,8 +31,8 @@ public class AddLocation extends Activity implements
 		com.google.android.gms.location.LocationListener {
 	private SQLiteDatabase db;
 	private DBManager dbHelper;
-
 	private GoogleApiClient mGoogleApiClient;
+	private AddLocationPresenter alp;
 
 	private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
 	private long FASTEST_INTERVAL = 2000; /* 2 sec */
@@ -122,19 +122,14 @@ public class AddLocation extends Activity implements
 
 	/* 輸入db */
 	private void addNewLocation(String name, String s1, String s2) {
-
+		alp = new AddLocationPresenterImpl(db);
 		switch (from) {
 			case 0:
-				String insert = "INSERT INTO location(name, latitude, longitude) VALUES ('"
-						+ name + "','" + s1 + "','" + s2 + "')";
-				db.execSQL(insert);
+				alp.selectInsertLocation(name,s1,s2);
 				break;
 
 			case 1:
-				String update = "UPDATE location SET name = '" + name
-						+ "',latitude = '" + s1 + "',longitude = '" + s2
-						+ "' WHERE id = '" + locationID + "'";
-				db.execSQL(update);
+				alp.selectUpdateLocation(name,s1,s2,locationID);
 				break;
 			default:
 				break;

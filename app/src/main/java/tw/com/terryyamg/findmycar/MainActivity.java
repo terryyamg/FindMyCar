@@ -8,7 +8,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.LocationManager;
 import android.os.Build;
@@ -38,19 +37,18 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,MainActivityView {
     private GoogleApiClient googleClient;
     private Function funHelper = new Function(this);
     private SQLiteDatabase db;
     private DBManager dbHelper;
+    private MainActivityPresenter map;
 
-    private List<ListItem> listItem, listItemEnable;
+    private List<ListItem> listItem;
     private RecyclerView lvLocation;
-    private CustomRecyclerViewAdapter adapter;
 
     private TextView tvMyCarLocation, tvState;
     private StringBuilder message;
@@ -62,12 +60,11 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         //ad
         AdView mAdView = (AdView) findViewById(R.id.adView);
         // AdRequest adRequest = new AdRequest.Builder().build();
-//        AdRequest adRequest = new AdRequest.Builder().addTestDevice("43418FAE080D9E74F91D761B77604321").build();
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("AF069AF27F8B630A0A87F78D7304C879").build();
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("43418FAE080D9E74F91D761B77604321").build();
+//        AdRequest adRequest = new AdRequest.Builder().addTestDevice("AF069AF27F8B630A0A87F78D7304C879").build();
         mAdView.loadAd(adRequest);
 
         //shortcut
@@ -138,8 +135,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         ibMark.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 tvState.setText(getResources().getString(R.string.positioning));
-                LocationGPS locationGPS = new LocationGPS(MainActivity.this, getEnableLocation(), tvMyCarLocation, tvState);
-                locationGPS.startConnect();
+                /*取出啟動地點*/
+                map.selectEnableLocationData();
             }
         });
 
@@ -245,60 +242,9 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
     /* 列出地點 */
     private void allLocation() {
+        map = new MainActivityPresenterImpl(this,db);
+        map.selectLocationData();
 
-        listItem = new ArrayList<>();
-        adapter = new CustomRecyclerViewAdapter(this, listItem);
-        lvLocation.setAdapter(adapter);
-
-        String select = "SELECT * FROM location";
-        Cursor cursor = db.rawQuery(select, null);
-        cursor.moveToFirst();
-        try {
-            do {
-                ListItem li = new ListItem();
-                li.setLocationID(cursor.getInt(0));// 地點id
-                li.setLocationName(cursor.getString(1));// 地點名稱
-                li.setLatitude(cursor.getDouble(2));// 緯度
-                li.setLongitude(cursor.getDouble(3));// 經度
-                li.setState(cursor.getInt(4));// 狀態
-                listItem.add(li);
-
-            } while (cursor.moveToNext());
-
-        } catch (Exception e) {
-
-        } finally {
-            cursor.close();
-        }
-
-        adapter.notifyDataSetChanged();
-
-    }
-
-    /*取出啟動地點*/
-    private List<ListItem> getEnableLocation() {
-        listItemEnable = new ArrayList<>();
-        String select = "SELECT * FROM location WHERE state = '1'";
-        Cursor cursor = db.rawQuery(select, null);
-        cursor.moveToFirst();
-        try {
-            do {
-                ListItem li = new ListItem();
-                li.setLocationID(cursor.getInt(0));// 地點id
-                li.setLocationName(cursor.getString(1));// 地點名稱
-                li.setLatitude(cursor.getDouble(2));// 緯度
-                li.setLongitude(cursor.getDouble(3));// 經度
-                li.setState(cursor.getInt(4));// 狀態
-                listItemEnable.add(li);
-
-            } while (cursor.moveToNext());
-
-        } catch (Exception e) {
-
-        } finally {
-            cursor.close();
-        }
-        return listItemEnable;
     }
 
     private void showLocationDialog(final int position) {
@@ -323,16 +269,11 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
             public void onCheckedChanged(CompoundButton buttonView,
                                          boolean isChecked) {
-
-                String update;
                 if (isChecked) { // 開啟
-                    update = "UPDATE location SET state = '1' WHERE id = '"
-                            + listItem.get(position).getLocationID() + "'";
+                    map.selectUpdateEnableState(1,listItem.get(position).getLocationID());
                 } else { // 關閉
-                    update = "UPDATE location SET state = '0' WHERE id = '"
-                            + listItem.get(position).getLocationID() + "'";
+                    map.selectUpdateEnableState(0,listItem.get(position).getLocationID());
                 }
-                db.execSQL(update);
                 allLocation();
             }
         });
@@ -367,10 +308,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                         new DialogInterface.OnClickListener() {
                             public void onClick(
                                     DialogInterface dialoginterface, int i) {
-
-                                String delete = "DELETE FROM location WHERE id = '"
-                                        + listItem.get(position).getLocationID() + "'";
-                                db.execSQL(delete);
+                                map.selectDeleteLocation(listItem.get(position).getLocationID());
                                 allLocation();
                                 dialog.dismiss();
                             }
@@ -457,5 +395,18 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         }
+    }
+
+    @Override
+    public void setLocationData(List<ListItem> data) {
+        listItem = data;
+        CustomRecyclerViewAdapter adapter = new CustomRecyclerViewAdapter(this, listItem);
+        lvLocation.setAdapter(adapter);
+    }
+
+    @Override
+    public void setEnableLocationData(List<ListItem> data) {
+        LocationGPS locationGPS = new LocationGPS(MainActivity.this, data, tvMyCarLocation, tvState);
+        locationGPS.startConnect();
     }
 }
