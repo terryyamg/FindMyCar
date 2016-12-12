@@ -8,7 +8,6 @@ import android.os.Bundle;
  */
 public class Introduction extends Activity {
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
