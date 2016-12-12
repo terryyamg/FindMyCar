@@ -29,4 +29,5 @@
     <string name="introduction">说明</string>
     <string name="transport_to_wear_title">传输到手表</string>
     <string name="permission_message">你需要允许访问位置</string>
+    <string name="banner_ad_unit_id">ca-app-pub-4805725849347372/3003128648</string>
 </resources>

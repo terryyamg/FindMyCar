@@ -29,5 +29,6 @@
     <string name="introduction">説明</string>
     <string name="transport_to_wear_title">腕時計に転送</string>
     <string name="permission_message"> あなたは場所へのアクセスを許可する必要があります</string>
+    <string name="banner_ad_unit_id">ca-app-pub-4805725849347372/3003128648</string>
 
 </resources>
